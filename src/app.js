@@ -18,17 +18,20 @@ app.get('/user',(req,res)=>{
     res.send('Got USER')
 })
 
-app.get(/ab*c/,(req,res)=>{
-    res.send('abXYZc')
+app.post('/user',(req,res)=>{
+    console.log(req.query)
+    res.send("Request query ")
 })
 
-app.get(/ab?c/,(req,res)=>{
-    res.send('ac or abc both will work')
+app.get('/user/:name/:password',(req,res)=>{
+    console.log(req.params)
+    res.send('PARAMS ADDED')
 })
 
-app.get(/ab+cd/, (req,res)=>{
-    res.send('abbbbbcd should also work')
+app.post('/user',(req,res)=>{
+    res.send('POST REQUEST SENT')
 })
+
 // USE BELOW ROUTE IN LAST EVERYTIME BECAUSE '/' ROUTE MATCHES EVERY ROUTE POSSIBLE
 app.use('/',(req,res)=>{
     res.send('Home page')

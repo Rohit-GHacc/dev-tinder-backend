@@ -36,6 +36,29 @@ app.get('/getUser', async (req,res)=>{
         res.status(400).send("Something went wrong.")
     }
 })
+
+// DELETING USER API
+app.delete('/deleteUser',async (req,res)=>{
+    try{
+        // console.log(req.body.id)
+        const user = await User.findByIdAndDelete(req.body.id)
+        console.log(user)
+        res.send("User deleted successfully")
+    }catch(err){
+        res.status(400).send("Something went wrong.")
+    }
+})
+
+app.patch('/updateUser',async (req,res)=>{
+    try{
+        console.log(req.body)
+        const user = await User.findByIdAndUpdate(req.body.id,req.body)
+        // console.log(user)
+        res.send("User updated successfully.")
+    }catch(err){
+        res.status(400).send("Something went wrong.")
+    }
+})
 // EXPORTED connectDB FROM database.js AND CHANGED THE VARIABLE NAME TO db  AND STILL WORKED
 db()
 .then(() => {

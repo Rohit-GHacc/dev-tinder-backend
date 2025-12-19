@@ -1,6 +1,13 @@
 const express = require('express')
 const app = express()
+const { userAuth, adminAuth } = require('./utils/middleware')
 
+app.get('/admin', adminAuth,(req,res)=>{
+    res.send('Admin Authorized.')
+})
+
+
+app.use('/user', userAuth)
 app.get('/user',
     (req,res,next)=>{
         console.log('First route handler')
@@ -15,9 +22,11 @@ app.get('/user',
     },
     (req,res,next)=>{
         console.log("Third route handler")
-        next();
+        res.send('Response 3')
     }]
 )
+
+// below code is never getting executed because response is sent above only
 app.get('/user',(req,res,next)=>{
     res.send('Response 4')
 })

@@ -75,11 +75,11 @@ app.patch("/updateUserWithEmail", async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { email: req.body.email },
-      req.body
+      req.body, {runValidators: true, }
     );
     res.send("User updated successfully.");
   } catch (err) {
-    res.status(400).send("Something went wrong.");
+    res.status(400).send("Update failed." + err.message);
   }
 });
 

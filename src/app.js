@@ -2,28 +2,57 @@ const express = require("express");
 const db = require("./config/database");
 const User = require("./models/user");
 const app = express();
-const { validation } = require('./utils/validation')
-const bcrypt = require('bcrypt')
+const { validation } = require("./utils/validation");
+const bcrypt = require("bcrypt");
+const validator = require('validator')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.post("/createUser", async (req, res) => {
   try {
     // VALIDATION IS MUST
-    validation(req)
+    validation(req);
 
-    const {firstName, lastName, email, password} = req.body
+    const { firstName, lastName, email, password } = req.body;
     // ENCRYPTING PASSWORD
-    const passwordHash = await bcrypt.hash(password,10)
+    const passwordHash = await bcrypt.hash(password, 10);
 
     // CREATING THE USER
     const user = new User({
-        firstName, lastName, email, password: passwordHash
+      firstName,
+      lastName,
+      email,
+      password: passwordHash,
     });
     await user.save();
     // console.log(User(dummyUser))
     res.send("user created successfully");
   } catch (err) {
     res.status(400).send("Error while creating the user" + err.message);
+  }
+});
+
+app.get("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // validation
+    if (!validator.isEmail) {
+      throw new Error("Invalid email");
+    }
+    // User registered or not
+    const user = await User.findOne({email})
+    if(!user){
+        throw new Error("Invalid credentials.")
+    }
+    // password check
+    const isPasswordRight = await bcrypt.compare(password,user.password )
+    if(!isPasswordRight){
+        throw new Error("Invalid credentials.")
+    }
+    // login
+    res.send("Login successful !!!")
+
+  } catch (err) {
+    res.status(400).send("Login failed: " + err.message);
   }
 });
 
@@ -87,7 +116,8 @@ app.patch("/updateUserWithEmail", async (req, res) => {
   try {
     const user = await User.findOneAndUpdate(
       { email: req.body.email },
-      req.body, {runValidators: true, }
+      req.body,
+      { runValidators: true }
     );
     res.send("User updated successfully.");
   } catch (err) {

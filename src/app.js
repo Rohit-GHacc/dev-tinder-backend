@@ -2,11 +2,23 @@ const express = require("express");
 const db = require("./config/database");
 const User = require("./models/user");
 const app = express();
+const { validation } = require('./utils/validation')
+const bcrypt = require('bcrypt')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.post("/createUser", async (req, res) => {
   try {
-    const user = new User(req.body);
+    // VALIDATION IS MUST
+    validation(req)
+
+    const {firstName, lastName, email, password} = req.body
+    // ENCRYPTING PASSWORD
+    const passwordHash = await bcrypt.hash(password,10)
+
+    // CREATING THE USER
+    const user = new User({
+        firstName, lastName, email, password: passwordHash
+    });
     await user.save();
     // console.log(User(dummyUser))
     res.send("user created successfully");

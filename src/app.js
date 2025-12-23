@@ -4,9 +4,13 @@ const User = require("./models/user");
 const app = express();
 const { validation } = require("./utils/validation");
 const bcrypt = require("bcrypt");
-const validator = require('validator')
+const validator = require("validator");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
+app.use(cookieParser());
+
 app.post("/createUser", async (req, res) => {
   try {
     // VALIDATION IS MUST
@@ -39,23 +43,49 @@ app.get("/login", async (req, res) => {
       throw new Error("Invalid email");
     }
     // User registered or not
-    const user = await User.findOne({email})
-    if(!user){
-        throw new Error("Invalid credentials.")
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error("Invalid credentials.");
     }
     // password check
-    const isPasswordRight = await bcrypt.compare(password,user.password )
-    if(!isPasswordRight){
-        throw new Error("Invalid credentials.")
+    const isPasswordRight = await bcrypt.compare(password, user.password);
+    if (!isPasswordRight) {
+      throw new Error("Invalid credentials.");
     }
     // login
-    res.send("Login successful !!!")
-
+    // AFTER PASSWORD VALIDATION  CREATE A COOKIE
+    // CREATE A JWT TOKEN
+    const SECRET_KEY = "Rohit is a good boy";
+    const token = jwt.sign({ id: user._id }, SECRET_KEY);
+    res.cookie("token", token);
+    // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
+    res.send("Login successful !!!");
   } catch (err) {
     res.status(400).send("Login failed: " + err.message);
   }
 });
 
+app.get("/profile", async (req, res) => {
+  try {
+    const cookies = req.cookies;
+    console.log(cookies);
+    const { token } = cookies;
+    const SECRET_KEY = "Rohit is a good boy";
+    const decoded = jwt.verify(token, SECRET_KEY);
+    console.log(decoded);
+    if (!decoded) {
+      throw new Error("Invalid token");
+    }
+    const { id } = decoded;
+    const user = await User.findById(id);
+    if (!user) {
+      throw new Error("Invalid user");
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("Profile fetching failed : " + err.message);
+  }
+});
 // DON'T FORGET TO USE ASYNC AWAIT
 app.get("/feed", async (req, res) => {
   try {
@@ -128,6 +158,7 @@ app.patch("/updateUserWithEmail", async (req, res) => {
 app.use((req, res) => {
   res.send("Hi Rohit");
 });
+
 // EXPORTED connectDB FROM database.js AND CHANGED THE VARIABLE NAME TO db  AND STILL WORKED
 db()
   .then(() => {

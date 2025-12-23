@@ -7,6 +7,7 @@ const bcrypt = require("bcrypt");
 const validator = require("validator");
 const cookieParser = require("cookie-parser");
 const jwt = require("jsonwebtoken");
+const { userAuth } = require('./middlewares/auth')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -56,8 +57,8 @@ app.get("/login", async (req, res) => {
     // AFTER PASSWORD VALIDATION  CREATE A COOKIE
     // CREATE A JWT TOKEN
     const SECRET_KEY = "Rohit is a good boy";
-    const token = jwt.sign({ id: user._id }, SECRET_KEY);
-    res.cookie("token", token);
+    const token = jwt.sign({ id: user._id }, SECRET_KEY,{expiresIn: '1d'});
+    res.cookie("token", token,{ expires: new Date(Date.now() + 900000), httpOnly: true });
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
     res.send("Login successful !!!");
   } catch (err) {
@@ -65,22 +66,10 @@ app.get("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
-    const cookies = req.cookies;
-    console.log(cookies);
-    const { token } = cookies;
-    const SECRET_KEY = "Rohit is a good boy";
-    const decoded = jwt.verify(token, SECRET_KEY);
-    console.log(decoded);
-    if (!decoded) {
-      throw new Error("Invalid token");
-    }
-    const { id } = decoded;
-    const user = await User.findById(id);
-    if (!user) {
-      throw new Error("Invalid user");
-    }
+    const { user } = req
+    // console.log(user)
     res.send(user);
   } catch (err) {
     res.status(400).send("Profile fetching failed : " + err.message);

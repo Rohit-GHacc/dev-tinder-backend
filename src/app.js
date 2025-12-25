@@ -49,15 +49,16 @@ app.get("/login", async (req, res) => {
       throw new Error("Invalid credentials.");
     }
     // password check
-    const isPasswordRight = await bcrypt.compare(password, user.password);
+    const isPasswordRight = await user.validatePassword(password);
     if (!isPasswordRight) {
       throw new Error("Invalid credentials.");
     }
     // login
     // AFTER PASSWORD VALIDATION  CREATE A COOKIE
     // CREATE A JWT TOKEN
-    const SECRET_KEY = "Rohit is a good boy";
-    const token = jwt.sign({ id: user._id }, SECRET_KEY,{expiresIn: '1d'});
+    // using mongooseSchema method : 
+    const token = await user.getJWT();
+    // console.log(token)
     res.cookie("token", token,{ expires: new Date(Date.now() + 900000), httpOnly: true });
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
     res.send("Login successful !!!");

@@ -13,7 +13,7 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.patch('/profile/edit/:id',async (req,res)=>{
+profileRouter.patch('/profile/edit/:id',userAuth, async (req,res)=>{
   try{
     console.log('Validation started.')
     validateEditFields(req)

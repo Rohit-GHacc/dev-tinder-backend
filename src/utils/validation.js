@@ -13,7 +13,35 @@ const validation = (req)=>{
     if(!validator.isStrongPassword(password)){
         throw new Error("Weak password")
     }
+}
+const validateEditFields = (req)=>{
+    const ALLOWED_FIELDS = ['firstName','lastName','skills','about','photoURL','age','gender']
 
+    const isAllowed = Object.keys(req.body).every(key=>ALLOWED_FIELDS.includes(key))
+    // console.log(isAllowed)
+    const updatedFields = Object.keys(req.body)
+    console.log(updatedFields)
+    if(updatedFields.includes('firstName')){
+        const firstName = req.body['firstName']
+        console.log(firstName)
+        if(!firstName || firstName.length < 3 || firstName.length > 50)
+            throw new Error('Invalid First Name.')
+    }
+    if(updatedFields.includes('lastName')){
+        const lastName = req.body['lastName']
+
+        if(!lastName || lastName.length < 3 || lastName.length > 50)
+            throw new Error('Invalid Last Name.')
+    }
+    if(updatedFields.includes('photoURL')){
+        const photoURL  = req.body['photoURL']
+        if(validator.isURL(photoURL))
+            throw new Error('Invalid photo URL.')
+    }
+    if(!isAllowed){
+        throw new Error('Not valid fields.')
+    }
+    
 }
 
-module.exports = { validation }
+module.exports = { validation, validateEditFields }

@@ -20,5 +20,11 @@ const connectionRequestSchema = new mongoose.Schema({
     timestamps: true
 })
 
+connectionRequestSchema.pre("save", function(next){
+    if(this.fromUserId.equals(this.toUserId)){
+        throw new Error("Good try...")
+    }
+    next();
+})
 const ConnectionRequest = mongoose.model("ConnectionRequest", connectionRequestSchema)
 module.exports = ConnectionRequest

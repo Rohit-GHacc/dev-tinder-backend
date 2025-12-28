@@ -3,7 +3,6 @@ const requestRouter = express.Router();
 const User = require("../models/user");
 const { userAuth } = require('../middlewares/auth');
 const ConnectionRequest = require('../models/connectionRequest');
-const { Connection } = require('mongoose');
 // requestRouter.get("/getUser", async (req, res) => {
 //   try {
 //     const user = await User.find({ email: req.body.email });
@@ -19,6 +18,11 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async(req,res)=>
     const status = req.params.status;
     console.log(toUserId, fromUserId);
     // validations : 
+    const allowedStatus = ['interested', 'ignored'];
+    if(!allowedStatus.includes(status)){
+      return res.status(400).send("Invalid status");
+    }
+
     // A->B and B->A both are same so can't send again
     const existingConnectionRequest = await ConnectionRequest.findOne({
       $or : [ { fromUserId, toUserId}, { fromUserId: toUserId, toUserId: fromUserId}]
@@ -48,4 +52,30 @@ requestRouter.post('/request/send/:status/:toUserId', userAuth, async(req,res)=>
   }
 })
 
+requestRouter.post('/request/review/:status/:requestId', userAuth, async(req,res)=>{
+  try{
+    const loggedInUser = req.user;
+    const requestId = req.params.requestId;
+    const status = req.params.status;
+    const allowedStatus = ["accepted", "rejected"];
+    if(!allowedStatus.includes(status)){
+      return res.status(400).send("Invalid status.")
+    }
+    const request = await ConnectionRequest.findOne({
+      _id: requestId,
+      toUserId: loggedInUser._id,
+      status: "interested"
+    })
+    if(!request){
+      return res.status(404).send("Request not found")
+    }
+    request.status = status;
+    await request.save();
+    res.send(`Request ${status}.`)
+  }catch(err){
+    res.status(400).send(
+      "Error : " + err.message
+    )
+  }
+})
 module.exports = requestRouter

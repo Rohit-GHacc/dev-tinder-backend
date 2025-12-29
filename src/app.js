@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const authRouter = require('./routes/auth')
 const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
+const userRouter = require('./routes/user')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -14,7 +15,7 @@ app.use(cookieParser());
 app.use('/',authRouter)
 app.use('/',profileRouter)
 app.use('/',requestRouter)
-
+app.use('/',userRouter)
 // DON'T FORGET TO USE ASYNC AWAIT
 // app.get("/feed", async (req, res) => {
 //   try {

@@ -13,12 +13,13 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
   }
 });
 
-profileRouter.patch('/profile/edit/:id',userAuth, async (req,res)=>{
+profileRouter.patch('/profile/edit',userAuth, async (req,res)=>{
   try{
     console.log('Validation started.')
     validateEditFields(req)
     // else throw new Error('Not Valid request.')
-    const updatedProfile = await User.findByIdAndUpdate(req.params.id,req.body,{ returnDocument:'after'})
+    const loggedInUser = req.user
+    const updatedProfile = await User.findByIdAndUpdate(req.user._id,req.body,{ returnDocument:'after'})
     console.log(updatedProfile)
     updatedProfile.save();
     res.send('Profile updated.')

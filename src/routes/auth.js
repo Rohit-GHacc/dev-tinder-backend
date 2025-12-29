@@ -11,17 +11,12 @@ authRouter.post("/createUser", async (req, res) => {
     // VALIDATION IS MUST
     validation(req);
 
-    const { firstName, lastName, email, password } = req.body;
+    const { firstName, lastName, email, password, skills, about, gender, age } = req.body;
     // ENCRYPTING PASSWORD
     const passwordHash = await bcrypt.hash(password, 10);
 
     // CREATING THE USER
-    const user = new User({
-      firstName,
-      lastName,
-      email,
-      password: passwordHash,
-    });
+    const user = new User({ firstName, lastName, email,skills ,about ,gender, age, password: passwordHash});
     await user.save();
     // console.log(User(dummyUser))
     res.send("user created successfully");

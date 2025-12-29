@@ -15,7 +15,6 @@ userRouter.get('/user/requests/received',userAuth, async(req, res)=>{
             message: "Following are your connection requests",
             data: connectionRequests
         });
-
     }catch(err){
         res.status(400).send('Error : ' + err.message)
     }

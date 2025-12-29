@@ -12,7 +12,7 @@ const userAuth = async function(req,res,next){
         }
         // attaching the user with the request body for further use in request handlers
         req.user = user
-        console.log(user)
+        // console.log(user)
         next();
     }
     catch(err){

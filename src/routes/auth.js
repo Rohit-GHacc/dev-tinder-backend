@@ -25,11 +25,11 @@ authRouter.post("/createUser", async (req, res) => {
   }
 });
 
-authRouter.get("/login", async (req, res) => {
+authRouter.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     // validation
-    if (!validator.isEmail) {
+    if (!validator.isEmail(email)) {
       throw new Error("Invalid email");
     }
     // User registered or not
@@ -50,18 +50,18 @@ authRouter.get("/login", async (req, res) => {
     // console.log(token)
     res.cookie("token", token,{ expires: new Date(Date.now() + 900000), httpOnly: true });
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
-    res.send("Login successful !!!");
+    res.send(user);
   } catch (err) {
     res.status(400).send("Login failed: " + err.message);
   }
 });
 
 authRouter.post('/logout',(req,res)=>{
-  // res.cookie('token',null,{
-  //   expires: new Date(0)
-  // })
+  res.cookie('token',null,{
+    expires: new Date(0)
+  })
   // BETTER METHOD : 
-  res.clearCookie('token')
+  // res.clearCookie('token')
   res.send('Logged out successfully.')
 })
 module.exports = authRouter

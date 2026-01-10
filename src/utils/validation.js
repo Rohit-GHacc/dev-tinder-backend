@@ -35,7 +35,11 @@ const validateEditFields = (req)=>{
     }
     if(updatedFields.includes('photoURL')){
         const photoURL  = req.body['photoURL']
-        if(validator.isURL(photoURL))
+        // console.log(req.body)
+        if(!validator.isURL(photoURL,{
+                require_protocol: true,
+                allow_query_components: true
+            }))
             throw new Error('Invalid photo URL.')
     }
     if(!isAllowed){

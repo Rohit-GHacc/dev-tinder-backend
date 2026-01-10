@@ -4,6 +4,9 @@ const userAuth = async function(req,res,next){
     try{
         const SECRET_KEY = 'Rohit is a good boy'
         const { token } = req.cookies
+        if(!token){
+            res.status(401).send("Please Login!")
+        }
         const decodedObj = jwt.verify(token , SECRET_KEY)
         const { id } = decodedObj
         const user = await User.findById(id)

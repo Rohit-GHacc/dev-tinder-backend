@@ -18,8 +18,11 @@ authRouter.post("/createUser", async (req, res) => {
     // CREATING THE USER
     const user = new User({ firstName, lastName, email,skills ,about ,gender, age, password: passwordHash});
     await user.save();
-    // console.log(User(dummyUser))
-    res.send("user created successfully");
+    const token = await user.getJWT();
+    // console.log(token)
+    res.cookie("token", token,{ expires: new Date(Date.now() + 900000), httpOnly: true });
+    // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
+    res.send(user);
   } catch (err) {
     res.status(400).send("Error while creating the user" + err.message);
   }

@@ -4,7 +4,7 @@ const { userAuth } = require('../middlewares/auth');
 const User = require('../models/user');
 const { ConnectionStates } = require('mongoose');
 const userRouter = express.Router();
-const USER_SAFE_DATA = 'firstName lastName about skills gender age'
+const USER_SAFE_DATA = 'firstName lastName about skills gender age photoURL'
 userRouter.get('/user/requests/received',userAuth, async(req, res)=>{
     try{
         const loggedInUser = req.user

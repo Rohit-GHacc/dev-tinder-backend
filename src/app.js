@@ -8,6 +8,7 @@ const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
 const userRouter = require('./routes/user')
 const cors = require('cors')
+require('dotenv').config()
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -90,10 +91,10 @@ app.use((req, res) => {
 db()
   .then(() => {
     console.log("Connected to database successfully");
-    app.listen(7777, () => {
+    app.listen(process.env.PORT, () => {
       console.log("Server running on port 7777 successfully.");
     });
   })
   .catch((err) => {
-    console.error("Database connection failed :(");
+    console.error("Database connection failed :(" + err.message);
   });

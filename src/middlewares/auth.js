@@ -2,12 +2,11 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/user')
 const userAuth = async function(req,res,next){
     try{
-        const SECRET_KEY = 'Rohit is a good boy'
         const { token } = req.cookies
         if(!token){
             res.status(401).send("Please Login!")
         }
-        const decodedObj = jwt.verify(token , SECRET_KEY)
+        const decodedObj = jwt.verify(token , process.env.JWT_SECRET)
         const { id } = decodedObj
         const user = await User.findById(id)
         if(!user){

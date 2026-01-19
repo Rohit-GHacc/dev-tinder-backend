@@ -66,8 +66,7 @@ const userSchema = new mongoose.Schema({
 // DON'T USE ARROW FUNCTION HERE
 userSchema.methods.getJWT = async function(){
     const user = this;
-    const SECRET_KEY = "Rohit is a good boy";
-    const token =  jwt.sign({ id: user._id }, SECRET_KEY,{expiresIn: '1d'});
+    const token =  jwt.sign({ id: user._id }, process.env.JWT_SECRET,{expiresIn: '1d'});
     return token
 }
 

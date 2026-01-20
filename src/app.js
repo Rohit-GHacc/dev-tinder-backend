@@ -13,7 +13,7 @@ require('dotenv').config()
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:'dev-tinder-frontend-ashen.vercel.app',
     credentials: true
 }))
 
@@ -91,7 +91,7 @@ app.use((req, res) => {
 db()
   .then(() => {
     console.log("Connected to database successfully");
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT || 7777, () => {
       console.log("Server running on port 7777 successfully.");
     });
   })

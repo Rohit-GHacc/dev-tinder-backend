@@ -13,7 +13,7 @@ require('dotenv').config()
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin:'dev-tinder-frontend-ashen.vercel.app',
+    origin:'https://dev-tinder-frontend-ashen.vercel.app',
     credentials: true
 }))
 

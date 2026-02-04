@@ -1,6 +1,9 @@
 const mongoose = require('mongoose')
 
 const paymentSchema = new mongoose.Schema({
+    paymentId:{
+        type: String
+    },
     orderId: {
         type: String,
         required: true
@@ -19,8 +22,18 @@ const paymentSchema = new mongoose.Schema({
         required: true
     },
     notes:{
-        type: Object,
-        required: true
+        firstName:{
+            type: String,
+            required: true
+        },
+        lastName:{
+            type:String,
+            required: true
+        },
+        membershipType:{
+            type: String,
+            required: true
+        }
     },
     receipt: {
         type: String,

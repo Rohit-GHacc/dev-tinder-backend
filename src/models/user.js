@@ -59,6 +59,13 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Invalid photo URL : " + value)
             }
         }
+    },
+    isPremium: {
+        type: Boolean,
+        required: true
+    },
+    membershipType: {
+        type: String,
     }
 },{
     timestamps: true

@@ -39,8 +39,9 @@ paymentRouter.post('/payment/create',userAuth,async(req,res)=>{
     }
 })
 
-paymentRouter.post('/payments/webhook',async (req,res)=>{
+paymentRouter.post('/payment/webhook',async (req,res)=>{
     try {
+        console.log('webhook called')
         const webhookSignature = req.headers("X-Razorpay-Signature")
         const isWebhookValid = validateWebhookSignature(
             JSON.stringify(req.body), 
@@ -60,19 +61,26 @@ paymentRouter.post('/payments/webhook',async (req,res)=>{
 
         // update the user as premium
         const user = await User.findOne({_id: payment.userId})
+        console.log(user)
         user.isPremium = true;
         user.membershipType = payment.notes.membershipType
         await user.save()
 
+        // if (req.body.event == "payment.captured") {
+        // }
+        // if (req.body.event == "payment.failed") {
+        // }
         // return success response to razorpay
         
+        return res.status(200).json({ msg: "Webhook received successfully" });
     } catch (err) {
         return res.status(500).json({message: err.message})
     }
 })
 
-paymentRouter.get('/payment/verify',userAuth, async( req,res)=>{
+paymentRouter.get('/premium/verify',userAuth, async( req,res)=>{
     const user = req.user;
+    console.log(user);
     if(user.isPremium){
         return res.json({isPremium: true})
     }else

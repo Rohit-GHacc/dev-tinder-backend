@@ -40,11 +40,12 @@ const paymentSchema = new mongoose.Schema({
         required: true
     },
     status:{
-        type: String
+        type: String,
+        required: true
     }
 
 },{
     timestamps: true
 })
 
-module.exports = mongoose.model("Payment", paymentSchema)
+module.exports = mongoose.model("payment", paymentSchema)

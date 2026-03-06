@@ -22,6 +22,7 @@ paymentRouter.post('/payment/create',userAuth,async(req,res)=>{
                 membershipType,
             }
         })
+        // save it in database
         const payment = new Payment({
             orderId: order.id,
             userId: req.user._id,
@@ -33,7 +34,8 @@ paymentRouter.post('/payment/create',userAuth,async(req,res)=>{
 
         })
         const savedPayment = await payment.save();
-        res.json({...savedPayment.toJSON(), key: process.env.RAZORPAY_KEY_ID})
+        // return back my order details to frontend
+        res.json({...savedPayment.toJSON(), keyId: process.env.RAZORPAY_KEY_ID})
     }catch(err){
         res.status(400).send({message: err.message})
     }
@@ -42,9 +44,9 @@ paymentRouter.post('/payment/create',userAuth,async(req,res)=>{
 paymentRouter.post('/payment/webhook',async (req,res)=>{
     try {
         console.log('webhook called')
-        const webhookSignature = req.headers["x-razorpay-signature"]
+        const webhookSignature = req.headers["X-Razorpay-Signature"]
         const isWebhookValid = validateWebhookSignature(
-            req.body, 
+            JSON.stringify(req.body), 
             webhookSignature, 
             process.env.RAZORPAY_WEBHOOK_SECRET
         )

@@ -62,7 +62,8 @@ const userSchema = new mongoose.Schema({
     },
     isPremium: {
         type: Boolean,
-        required: true
+        required: true,
+        default: false
     },
     membershipType: {
         type: String,

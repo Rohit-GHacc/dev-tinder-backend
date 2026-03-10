@@ -10,6 +10,8 @@ const userRouter = require('./routes/user')
 require('dotenv').config()
 const paymentRouter = require('./routes/payment')
 const cors = require('cors')
+const http = require('http')
+const initializeSocket = require('./utils/socket')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -92,11 +94,13 @@ app.use((req, res) => {
   res.send("Hi Rohit");
 });
 
+const server = http.createServer(app);
+initializeSocket(server)
 // EXPORTED connectDB FROM database.js AND CHANGED THE VARIABLE NAME TO db  AND STILL WORKED
 db()
   .then(() => {
     console.log("Connected to database successfully");
-    app.listen(process.env.PORT || 7777, () => {
+    server.listen(process.env.PORT || 7777, () => {
       console.log("Server running on port 7777 successfully.");
     });
   })

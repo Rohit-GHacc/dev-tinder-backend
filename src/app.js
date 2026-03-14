@@ -11,7 +11,8 @@ require('dotenv').config()
 const paymentRouter = require('./routes/payment')
 const cors = require('cors')
 const http = require('http')
-const initializeSocket = require('./utils/socket')
+const initializeSocket = require('./utils/socket');
+const chatRouter = require("./routes/chat");
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -28,6 +29,7 @@ app.use('/',profileRouter)
 app.use('/',requestRouter)
 app.use('/',userRouter)
 app.use('/',paymentRouter)
+app.use('/',chatRouter)
 // DON'T FORGET TO USE ASYNC AWAIT
 // app.get("/feed", async (req, res) => {
 //   try {

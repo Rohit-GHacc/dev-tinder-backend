@@ -4,7 +4,7 @@ const userAuth = async function(req,res,next){
     try{
         const { token } = req.cookies
         if(!token){
-            res.status(401).send("Please Login!")
+            return res.status(401).send("Please Login!")
         }
         const decodedObj = jwt.verify(token , process.env.JWT_SECRET)
         const { id } = decodedObj
@@ -18,7 +18,7 @@ const userAuth = async function(req,res,next){
         next();
     }
     catch(err){
-        res.status(400).send("ERROR : " + err.message)
+        return res.status(400).send("ERROR : " + err.message)
     }
 }
 

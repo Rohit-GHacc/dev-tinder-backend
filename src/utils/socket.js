@@ -48,11 +48,11 @@ const initializeSocket = (server) => {
                 text
             })
             await chat.save()
-            io.to(roomId).emit('messageReceived',{firstName, lastName, text})
+            io.to(roomId).emit('messageReceived',{senderId: userId, firstName, lastName, text})
         }catch(err){
             console.error(err);
         }
-
+ 
     });
 
     socket.on("disconnect", () => {});

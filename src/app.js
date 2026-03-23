@@ -4,15 +4,16 @@ const User = require("./models/user");
 const app = express();
 const cookieParser = require("cookie-parser");
 const authRouter = require('./routes/auth')
-const profileRouter = require('./routes/profile')
 const requestRouter = require('./routes/request')
 const userRouter = require('./routes/user')
 require('dotenv').config()
+const profileRouter = require('./routes/profile')
 const paymentRouter = require('./routes/payment')
 const cors = require('cors')
 const http = require('http')
 const initializeSocket = require('./utils/socket');
 const chatRouter = require("./routes/chat");
+
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());

@@ -20,15 +20,15 @@ authRouter.post("/createUser", async (req, res) => {
     await user.save();
     const token = await user.getJWT();
     // console.log(token)
-    res.cookie("token", token,{ 
-      expires: new Date(Date.now() + 900000), 
-      httpOnly: true, 
-      secure: true,        // must be true on HTTPS (Vercel/Render)
-      sameSite: "none", 
-    });
+    // res.cookie("token", token,{ 
+    //   expires: new Date(Date.now() + 900000), 
+    //   httpOnly: true, 
+    //   secure: true,        // must be true on HTTPS (Vercel/Render)
+    //   sameSite: "none", 
+    // });
 
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
-    res.send(user);
+    res.send({user, token});
   } catch (err) {
     res.status(400).send("Error while creating the user" + err.message);
   }
@@ -57,13 +57,13 @@ authRouter.post("/login", async (req, res) => {
     // using mongooseSchema method : 
     const token = await user.getJWT();
     // console.log(token)
-    res.cookie("token", token,{ expires: new Date(Date.now() + 900000), 
-      httpOnly: true,
-      secure: true,        // must be true on HTTPS (Vercel/Render)
-      sameSite: "none", }
-    );
+    // res.cookie("token", token,{ expires: new Date(Date.now() + 900000), 
+    //   httpOnly: true,
+    //   secure: true,        // must be true on HTTPS (Vercel/Render)
+    //   sameSite: "none", }
+    // );
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
-    res.send(user);
+    res.send({user ,token});
   } catch (err) {
     res.status(400).send("Login failed: " + err.message);
   }

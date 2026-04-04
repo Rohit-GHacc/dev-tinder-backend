@@ -23,8 +23,8 @@ authRouter.post("/createUser", async (req, res) => {
     res.cookie("token", token,{ 
       expires: new Date(Date.now() + 900000), 
       httpOnly: true, 
-      secure: true,        // must be true on HTTPS (Vercel/Render)
-      sameSite: "none", 
+      secure: false,        // must be true on HTTPS (Vercel/Render)
+      sameSite: "lax", 
     });
 
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
@@ -59,8 +59,8 @@ authRouter.post("/login", async (req, res) => {
     // console.log(token)
     res.cookie("token", token,{ expires: new Date(Date.now() + 900000), 
       httpOnly: true,
-      secure: true,        // must be true on HTTPS (Vercel/Render)
-      sameSite: "none", }
+      secure: false,        // must be true on HTTPS (Vercel/Render)
+      sameSite: "lax", }
     );
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
     res.send(user);

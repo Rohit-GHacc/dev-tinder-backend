@@ -51,13 +51,15 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: "There's nothing much about me to tell."
     },
-    photoURL:{
-        type: String,
-        default: 'https://cdn.vectorstock.com/i/500p/29/52/faceless-male-avatar-in-hoodie-vector-56412952.jpg',
-        validate(value){
-            if(!validator.isURL(value)){
-                throw new Error("Invalid photo URL : " + value)
-            }
+    images:{
+        type: [String],
+        default: ['https://cdn.vectorstock.com/i/500p/29/52/faceless-male-avatar-in-hoodie-vector-56412952.jpg'],
+        validate(values){
+            values.map((value)=>{
+                if(!validator.isURL(value)){
+                    throw new Error("Invalid photo URL : ", value)
+                }
+            })
         }
     },
     isPremium: {

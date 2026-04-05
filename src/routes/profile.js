@@ -37,25 +37,40 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
 
 profileRouter.post(
   "/profile/upload",
-  upload.single("image"),
+  upload.array("images",5),
   userAuth,
   async (req, res) => {
     try {
-      if (!req.file) {
+      if (!req.files) {
         return res.status(400).send("No file uploaded");
       }
-      console.log(req.file);
-      const result = await cloudinary.uploader.upload(req.file.path);
-      console.log(result.secure_url);
-      const updatedProfile = await User.findByIdAndUpdate(
-        req.user._id,
-        { photoURL: result.secure_url },
-        { returnDocument: "after" },
-      );
-      res.json(updatedProfile);
+      // console.log(req.file);
+      // const result = await cloudinary.uploader.upload(req.file.path);
+      // console.log(result.secure_url);
+      // const updatedProfile = await User.findByIdAndUpdate(
+      //   req.user._id,
+      //   { photoURL: result.secure_url },
+      //   { returnDocument: "after" },
+      // );
+      // res.json(updatedProfile);
+
+      const uploadPromises = req.files.map(file =>{
+        return new Promise((resolve, reject)=>{
+          cloudinary.uploader.upload_stream({folder: 'devhub'},(error, result)=>{
+            if(error) reject(error)
+            else resolve(result.secure_url)
+          })
+          .end(file.buffer)
+        })
+      })
+      const imageUrls = await Promise.all(uploadPromises);
+      res.json({
+        success: true,
+        images: imageUrls
+      })
     } catch (err) {
       console.error(err)
-      res.status(400).send("Error while uploading the image : " + err.message);
+      res.status(500).send("Error while uploading the image : " + err.message);
     }
   },
 );

@@ -1,8 +1,9 @@
-const multer = require('multer')
+const multer = require("multer");
 
-const storage = multer.diskStorage({});
+const storage = multer.memoryStorage();
+
 const upload = multer({ storage });
 
-module.exports = upload
+module.exports = upload;
 
 // imported in routes/profile

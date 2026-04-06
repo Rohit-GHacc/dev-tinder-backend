@@ -26,6 +26,7 @@ const validateEditFields = (req) => {
     "skills",
     "about",
     "images",
+    "existingImages",
     "age",
     "gender",
   ];
@@ -50,8 +51,37 @@ const validateEditFields = (req) => {
   }
   if (updatedFields.includes("images")) {
     const images = req.body["images"];
-    // console.log(req.body)
-    images.forEach((image) => {
+
+    const normalizedImages = Array.isArray(images)
+      ? images
+      : typeof images === "string"
+        ? [images]
+        : [];
+
+    normalizedImages.forEach((image) => {
+      if (
+        !validator.isURL(image, {
+          require_protocol: true,
+          allow_query_components: true,
+        })
+      )
+        throw new Error("Invalid photo URL.");
+    });
+  }
+
+  if (updatedFields.includes("existingImages")) {
+    let existingImages;
+    try {
+      existingImages = JSON.parse(req.body["existingImages"]);
+    } catch (e) {
+      throw new Error("Invalid existingImages");
+    }
+
+    if (!Array.isArray(existingImages)) {
+      throw new Error("Invalid existingImages");
+    }
+
+    existingImages.forEach((image) => {
       if (
         !validator.isURL(image, {
           require_protocol: true,

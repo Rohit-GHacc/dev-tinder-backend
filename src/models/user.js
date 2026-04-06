@@ -53,7 +53,6 @@ const userSchema = new mongoose.Schema({
     },
     images:{
         type: [String],
-        default: ['https://cdn.vectorstock.com/i/500p/29/52/faceless-male-avatar-in-hoodie-vector-56412952.jpg'],
         validate(values){
             values.map((value)=>{
                 if(!validator.isURL(value)){

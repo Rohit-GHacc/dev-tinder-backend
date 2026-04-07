@@ -57,6 +57,30 @@ profileRouter.patch(
         imageUrls = [...imageUrls, ...newImages]; // or just = newImages
       }
 
+      if (typeof req.body.skills === "string") {
+        try {
+          const parsedSkills = JSON.parse(req.body.skills);
+          if (Array.isArray(parsedSkills)) {
+            req.body.skills = parsedSkills;
+          }
+        } catch (e) {
+          // keep as-is; validation should catch invalid payloads
+        }
+      }
+
+      if (typeof req.body.projects === "string") {
+        try {
+          const parsedProjects = JSON.parse(req.body.projects);
+          if (Array.isArray(parsedProjects)) {
+            req.body.projects = parsedProjects;
+          }
+        } catch (e) {
+          // keep as-is; validation should catch invalid payloads
+        }
+      }
+
+      delete req.body.existingImages;
+
       const updatedProfile = await User.findByIdAndUpdate(
         loggedInUser._id,
         {

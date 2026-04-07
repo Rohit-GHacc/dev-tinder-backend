@@ -29,6 +29,7 @@ const validateEditFields = (req) => {
     "existingImages",
     "age",
     "gender",
+    "projects"
   ];
 
   const isAllowed = Object.keys(req.body).every((key) =>
@@ -89,6 +90,64 @@ const validateEditFields = (req) => {
         })
       )
         throw new Error("Invalid photo URL.");
+    });
+  }
+
+  if (updatedFields.includes("skills")) {
+    let skills;
+    try {
+      skills =
+        typeof req.body["skills"] === "string"
+          ? JSON.parse(req.body["skills"])
+          : req.body["skills"];
+    } catch (e) {
+      throw new Error("Invalid skills");
+    }
+
+    if (!Array.isArray(skills)) {
+      throw new Error("Invalid skills");
+    }
+
+    if (skills.length > 10) {
+      throw new Error("Too many skills");
+    }
+
+    skills.forEach((skill) => {
+      if (typeof skill !== "string" || skill.trim().length === 0) {
+        throw new Error("Invalid skills");
+      }
+    });
+  }
+
+  if (updatedFields.includes("projects")) {
+    let projects;
+    try {
+      projects =
+        typeof req.body["projects"] === "string"
+          ? JSON.parse(req.body["projects"])
+          : req.body["projects"];
+    } catch (e) {
+      throw new Error("Invalid projects");
+    }
+
+    if (!Array.isArray(projects)) {
+      throw new Error("Invalid projects");
+    }
+
+    if (projects.length > 6) {
+      throw new Error("Too many projects");
+    }
+
+    projects.forEach((url) => {
+      if (
+        typeof url !== "string" ||
+        !validator.isURL(url, {
+          require_protocol: true,
+          allow_query_components: true,
+        })
+      ) {
+        throw new Error("Invalid project URL.");
+      }
     });
   }
   if (!isAllowed) {

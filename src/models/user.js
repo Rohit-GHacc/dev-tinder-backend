@@ -68,6 +68,9 @@ const userSchema = new mongoose.Schema({
     },
     membershipType: {
         type: String,
+    },
+    projects:{
+        type: [String]
     }
 },{
     timestamps: true

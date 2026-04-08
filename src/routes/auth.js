@@ -30,7 +30,7 @@ authRouter.post("/createUser", async (req, res) => {
     // ADD TOKEN TO COOKIE AND SEND THE RESPONSE BACK TO COOKIE
     res.send({user, token});
   } catch (err) {
-    res.status(400).send("Error while creating the user" + err.message);
+    res.status(400).send(err.message);
   }
 });
 

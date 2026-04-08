@@ -16,7 +16,7 @@ const validation = (req) => {
     throw new Error("Invalid email id");
   }
   if (!validator.isStrongPassword(password)) {
-    throw new Error("Weak password");
+    throw new Error("Password must contain atleast 1 upper case letter, 1 lower case letter, 1 symbol and 1 digit and should be atleast 8 characters in length!");
   }
 };
 const validateEditFields = (req) => {

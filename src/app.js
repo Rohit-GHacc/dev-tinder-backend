@@ -13,7 +13,7 @@ const cors = require('cors')
 const http = require('http')
 const initializeSocket = require('./utils/socket');
 const chatRouter = require("./routes/chat");
-
+require('./utils/cron')
 // CONVERTS JSON OBJECT TO JAVASCRIPT OBJECT
 app.use(express.json());
 app.use(cookieParser());
@@ -31,6 +31,10 @@ app.use('/',requestRouter)
 app.use('/',userRouter)
 app.use('/',paymentRouter)
 app.use('/',chatRouter)
+
+app.get("/health", (req, res) => {
+  res.status(200).json({ ok: true });
+});
 // DON'T FORGET TO USE ASYNC AWAIT
 // app.get("/feed", async (req, res) => {
 //   try {
